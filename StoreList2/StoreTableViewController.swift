@@ -12,6 +12,7 @@ class StoreTableViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    
     private var stores = [Store](){
         didSet {
         DispatchQueue.main.async {
@@ -23,7 +24,9 @@ class StoreTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.delegate = self
         tableView.dataSource = self
+        
         fetchStoreData()
     }
     
@@ -37,12 +40,19 @@ class StoreTableViewController: UIViewController {
             
         }
     }
-    
-   
-    
-   
-    
 }
+
+extension StoreTableViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let store = stores[indexPath.row]
+        guard let storeDetailVC = StoreDetailViewController(store: store) else { return }
+        present(storeDetailVC, animated: true, completion: nil)
+//       navigationController?.pushViewController(storeDetailVC, animated: true)
+
+    }
+}
+
 extension StoreTableViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -55,9 +65,12 @@ extension StoreTableViewController: UITableViewDataSource {
             
         }
         let store = stores[indexPath.row]
-        cell.titleLabel.text = store.name
+        cell.setupWithData(store)
+       
         return cell
         
     }
     
 }
+
+

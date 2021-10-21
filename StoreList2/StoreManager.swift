@@ -12,7 +12,7 @@ protocol NetworkManagerProtocol {
     
 }
 
-class StoreManager {
+struct StoreManager: NetworkManagerProtocol {
     
     func fetchData(from url: URL, withKey key: String = "store-data", completion: @escaping ([Store]) -> Void) {
         
@@ -23,7 +23,7 @@ class StoreManager {
     
     URLSession.shared.dataTask(with: url) {data, response, error in
         guard let data = data else {return}
-        completion(self.parseData(data))
+        completion(parseData(data))
         } .resume()
     }
 
