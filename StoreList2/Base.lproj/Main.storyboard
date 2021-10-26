@@ -35,7 +35,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6FN-ru-4x5">
-                                                    <rect key="frame" x="96" y="0.0" width="282" height="44"/>
+                                                    <rect key="frame" x="89" y="-1" width="282" height="44"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -43,13 +43,13 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="hnE-nM-WSi" firstAttribute="top" secondItem="41P-q3-0up" secondAttribute="topMargin" constant="-11" id="2vJ-ZJ-gyB"/>
-                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="leading" secondItem="41P-q3-0up" secondAttribute="leading" constant="96" id="Aa6-Dr-h4t"/>
-                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="centerX" secondItem="41P-q3-0up" secondAttribute="centerX" constant="30" id="Cd1-yB-E36"/>
-                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="leading" secondItem="41P-q3-0up" secondAttribute="leading" constant="96" id="FpG-8K-Aqs"/>
-                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="leading" secondItem="hnE-nM-WSi" secondAttribute="trailing" constant="15" id="KiS-4T-4zl"/>
-                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="centerY" secondItem="hnE-nM-WSi" secondAttribute="centerY" id="TIn-d4-gU6"/>
+                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="leading" secondItem="41P-q3-0up" secondAttribute="leading" constant="89" id="Aa6-Dr-h4t"/>
+                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="centerX" secondItem="41P-q3-0up" secondAttribute="centerX" constant="23" id="Cd1-yB-E36"/>
+                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="leading" secondItem="41P-q3-0up" secondAttribute="leading" constant="89" id="FpG-8K-Aqs"/>
+                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="leading" secondItem="hnE-nM-WSi" secondAttribute="trailing" constant="8" id="KiS-4T-4zl"/>
+                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="centerY" secondItem="hnE-nM-WSi" secondAttribute="centerY" constant="-1" id="TIn-d4-gU6"/>
                                                 <constraint firstItem="hnE-nM-WSi" firstAttribute="centerX" secondItem="41P-q3-0up" secondAttribute="centerX" constant="-160.5" id="cwH-OP-ucz"/>
-                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="top" secondItem="41P-q3-0up" secondAttribute="topMargin" constant="-11" id="pal-cJ-Uxe"/>
+                                                <constraint firstItem="6FN-ru-4x5" firstAttribute="top" secondItem="41P-q3-0up" secondAttribute="topMargin" constant="-12" id="pal-cJ-Uxe"/>
                                                 <constraint firstItem="hnE-nM-WSi" firstAttribute="leading" secondItem="41P-q3-0up" secondAttribute="leading" constant="12" id="q08-Hs-W9o"/>
                                             </constraints>
                                         </tableViewCellContentView>

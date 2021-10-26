@@ -15,6 +15,7 @@ class StoreTableViewController: UIViewController {
     
     private var stores = [Store](){
         didSet {
+            
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -46,7 +47,7 @@ extension StoreTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let store = stores[indexPath.row]
-        guard let storeDetailVC = StoreDetailViewController(store: store) else { return }
+        let storeDetailVC = StoreDetailViewController(store: store)
         present(storeDetailVC, animated: true, completion: nil)
 //       navigationController?.pushViewController(storeDetailVC, animated: true)
 

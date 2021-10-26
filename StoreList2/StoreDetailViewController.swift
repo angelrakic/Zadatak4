@@ -7,8 +7,12 @@
 
 import UIKit
 import MapKit
+import CoreLocation
 
-class StoreDetailViewController: UIViewController {
+class StoreDetailViewController: UIViewController, CLLocationManagerDelegate {
+    
+    
+    private var locationManager: CLLocationManager?
     
     private lazy var storeNameLabel: UILabel = {
         let label = UILabel()
@@ -17,17 +21,23 @@ class StoreDetailViewController: UIViewController {
         return label
     }()
     
-    private var map = MKMapView()
+   private var mapView = MKMapView()
     
+           let leftMargin:CGFloat = 10
+           let topMargin:CGFloat = 60
+           let mapWidth:CGFloat = 20
+           let mapHeight:CGFloat = 300
+                     
     
     private var logoImageView = UIImageView(frame: CGRect())
-    private var storePhoneNumber = UILabel()
+    private var storePhoneNumber = UIButton()
     
     
     private var store: Store
     
+    private var heighConstraint = NSLayoutConstraint()
     
-    init?(store: Store) {
+    init(store: Store) {
         self.store = store
         super.init(nibName: nil, bundle: nil)
     }
@@ -36,30 +46,63 @@ class StoreDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+ 
+    //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.map.delegate = self
+        self.mapView.delegate = self
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.requestAlwaysAuthorization()
+        view.backgroundColor = .systemPink
+        
         setupViews()
         
-        self.logoImageView.isHidden = true
-        self.heighConstraint.isActive = false
+        loadImage()
+        updateViewWithData()
+        updateMapWithData()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            UIView.animate(withDuration: 2) {
-            self.changeHeight()
+        storePhoneNumber .addTarget(self, action: #selector(createPhoneCall), for: .touchUpInside)
+        
+        }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedAlways {
+            if CLLocationManager.isMonitoringAvailable(for: CLBeaconRegion.self) {
+                if CLLocationManager.isRangingAvailable() {
+                }
             }
         }
     }
     
-    private var heighConstraint = NSLayoutConstraint()
+    @objc
+    func createPhoneCall() {
+        if let phoneCallURL = URL(string: "tel://\(store.phone)") {
+            let application:UIApplication = UIApplication.shared
+            if (application.canOpenURL(phoneCallURL)) {
+                application.open(phoneCallURL, options: [:], completionHandler: nil)
+            }
+        }
+    }
     
-    private func setupViews() {
-        navigationController?.navigationBar.backgroundColor = .white
-        view.backgroundColor = .white
-        
-        heighConstraint = logoImageView.heightAnchor.constraint(equalToConstant: 0)
-
-        
+    
+    fileprivate func updateViewWithData() {
+        storePhoneNumber.setTitle(store.phone, for: .normal)
+        storeNameLabel.text = store.name
+    }
+    
+    override func didReceiveMemoryWarning() {
+           super.didReceiveMemoryWarning()
+           // Dispose of any resources that can be recreated.
+       }
+       
+       override func viewWillAppear(_ animated: Bool) {
+           super.viewWillAppear(animated)
+       }
+    
+    
+    
+    fileprivate func extractedFunc() {
         ImageCacheManager.getImage(from: store.storeLogoURL) { image in
             if let image = image {
                 DispatchQueue.main.async { [weak self] in
@@ -69,11 +112,39 @@ class StoreDetailViewController: UIViewController {
             }
             
         }
+    }
+    
+    fileprivate func loadImage() {
+        extractedFunc()
+    }
+    
+    private func updateMapWithData() {
+        let latitude: CLLocationDegrees = Double(store.latitude) ?? 0
+        let longitude: CLLocationDegrees = Double(store.longitude) ?? 0
+        
+        let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let location = MKCoordinateRegion(center: center, span: span)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = center
+        annotation.title = store.name
+        mapView.addAnnotation(annotation)
+        mapView.setRegion(location, animated: true)
+    }
+    
+    private func setupViews() {
+        navigationController?.navigationBar.backgroundColor = .white
+        view.backgroundColor = .white
+                
+        storePhoneNumber.setTitleColor(.blue, for: .normal)
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
+        logoImageView.contentMode = .scaleAspectFill
+        
+        mapView.translatesAutoresizingMaskIntoConstraints = false
         
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         logoImageView.contentMode = .scaleAspectFill
-        storePhoneNumber.text = store.phone
-        storeNameLabel.text = store.name
+        
 
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -82,18 +153,22 @@ class StoreDetailViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         stackView.addArrangedSubview(logoImageView)
+        stackView.addArrangedSubview(mapView)
         stackView.addArrangedSubview(storeNameLabel)
         stackView.addArrangedSubview(storePhoneNumber)
         
         view.addSubview(stackView)
+      
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             stackView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
-            
+            logoImageView.heightAnchor.constraint(equalToConstant: 100),
             logoImageView.widthAnchor.constraint(lessThanOrEqualToConstant: 100),
+            mapView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            mapView.heightAnchor.constraint(equalToConstant: 200)
             
         ])
     }
@@ -110,7 +185,10 @@ class StoreDetailViewController: UIViewController {
 
 extension StoreDetailViewController: MKMapViewDelegate {
     func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
+
         print(mapView)
     }
     
 }
+
+
